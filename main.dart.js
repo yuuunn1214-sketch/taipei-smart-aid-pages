@@ -104975,8 +104975,8 @@ h=j>12&&l===3?2:0
 g=j>15&&l===4?2:0
 m.n(0,k,A.ab(["\u826f\u54c1",B.f.d0(j-i-h-g,0,j),"\u5373\u671f\u54c1",i,"\u5831\u5ee2\u54c1",h,"\u640d\u58de\u54c1",g],s,p))}q.n(0,n,m)}f.x!==$&&A.bb()
 f.x=q},
-Wm(a,b){var s=B.f.br(a*13+b*7,24)
-return B.d.aH(B.U7[b]*(0.72+s/100))},
+Wm(a,b){var s=B.f.br(a*13+b*7,24),r=b<6?B.U7[b]:0
+return B.d.aH(r*(0.72+s/100))},
 aB(a){var s
 this.aR(a)
 s=this.a.c
