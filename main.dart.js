@@ -108937,7 +108937,7 @@ for(;;){if(!(p<q.length&&p<6))break
 o.push(new A.di(new A.acX(r,q,p,s,b),null));++p}return A.me(B.Ff,o,B.ct,8,8)},
 $S:223}
 A.acX.prototype={
-$1(a){var s=this,r=s.c,q=s.b[r],p=B.d.cJ(B.d.cJ(88+(J.c3(q.b)-1)*5+s.d*40,88,128),0,s.e.b),o=q.a
+$1(a){var s=this,r=s.c,q=s.b[r],p=B.d.cJ(B.d.cJ(88+(J.c3(q.b)-1)*5+s.d*72,88,144),0,s.e.b),o=q.a
 return A.aTx(A.cN(new A.a_G(q,A.b1g(o),new A.acW(s.a,a,q),new A.dG("disaster-category-"+o,t.kK)),p,p),new A.h((r*7+3)%9-4,(r*5+1)%9-4))},
 $S:698}
 A.acW.prototype={
