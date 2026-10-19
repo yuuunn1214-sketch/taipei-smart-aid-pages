@@ -34,42 +34,23 @@
 </head>
 <body>
   <script>
-    // Remove an older Flutter offline worker before starting the app. Old
-    // workers can keep showing a previous release on mobile browsers.
-    (async function () {
-      if (sessionStorage.getItem('smart-aid-cache-reset')) {
-        sessionStorage.removeItem('smart-aid-cache-reset');
-        var cleanUrl = new URL(window.location.href);
-        cleanUrl.searchParams.delete('_refresh');
-        window.history.replaceState(null, '', cleanUrl.toString());
-      }
-      var registrations = 'serviceWorker' in navigator
-        ? await navigator.serviceWorker.getRegistrations()
-        : [];
-      var cacheKeys = 'caches' in window ? await caches.keys() : [];
-      if (registrations.length || cacheKeys.length) {
-        await Promise.all(registrations.map(function (registration) {
-          return registration.unregister();
-        }));
-        await Promise.all(cacheKeys.map(function (key) {
-          return caches.delete(key);
-        }));
+    // Start Flutter immediately. Waiting for Service Worker or Cache Storage
+    // cleanup here can leave Safari showing a blank page if those APIs stall.
+    var flutterBootstrap = document.createElement('script');
+    flutterBootstrap.src = 'flutter_bootstrap.js?build=0f2a97699af4374a264172fe2d4f18eab7cf4cd6';
+    flutterBootstrap.async = true;
+    document.body.appendChild(flutterBootstrap);
 
-        // Start a fresh, network-loaded document once after removing a worker.
-        if (registrations.length && !sessionStorage.getItem('smart-aid-cache-reset')) {
-          sessionStorage.setItem('smart-aid-cache-reset', '1');
-          var freshUrl = new URL(window.location.href);
-          freshUrl.searchParams.set('_refresh', Date.now().toString());
-          window.location.replace(freshUrl.toString());
-          return;
-        }
-      }
-
-      var bootstrap = document.createElement('script');
-      bootstrap.src = 'flutter_bootstrap.js?v=' + Date.now();
-      bootstrap.async = true;
-      document.body.appendChild(bootstrap);
-    })();
+    // Retire old offline workers in the background without blocking startup.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations()
+        .then(function (registrations) {
+          return Promise.all(registrations.map(function (registration) {
+            return registration.unregister();
+          }));
+        })
+        .catch(function () {});
+    }
   </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.

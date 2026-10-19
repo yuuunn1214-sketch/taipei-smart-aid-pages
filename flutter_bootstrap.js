@@ -46,7 +46,7 @@ _flutter.buildConfig = {"engineRevision":"deb287481e3ce9468f3434937ced4240a70539
 for (const build of _flutter.buildConfig.builds) {
   const entrypoint = build.mainJsPath || 'main.dart.js';
   const separator = entrypoint.includes('?') ? '&' : '?';
-  build.mainJsPath = `${entrypoint}${separator}build=becd4d19cc1b3e610bc911fbf36562617d28e769`;
+  build.mainJsPath = `${entrypoint}${separator}build=0f2a97699af4374a264172fe2d4f18eab7cf4cd6`;
 }
 
 _flutter.loader.load();
