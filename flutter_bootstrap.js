@@ -46,7 +46,14 @@ _flutter.buildConfig = {"engineRevision":"deb287481e3ce9468f3434937ced4240a70539
 for (const build of _flutter.buildConfig.builds) {
   const entrypoint = build.mainJsPath || 'main.dart.js';
   const separator = entrypoint.includes('?') ? '&' : '?';
-  build.mainJsPath = `${entrypoint}${separator}build=0f2a97699af4374a264172fe2d4f18eab7cf4cd6`;
+  build.mainJsPath = `${entrypoint}${separator}build=4a033d5d7c48ac74c23665eb4e995b77dd38271b`;
 }
 
-_flutter.loader.load();
+// Some iOS Safari and embedded WebViews fail to create CanvasKit's WebGL
+// context and render only a blank page. CPU rendering avoids that path.
+const isAppleMobileBrowser = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+_flutter.loader.load({
+  config: isAppleMobileBrowser ? { canvasKitForceCpuOnly: true } : {},
+});
