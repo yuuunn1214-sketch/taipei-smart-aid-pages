@@ -37,20 +37,63 @@
     // Start Flutter immediately. Waiting for Service Worker or Cache Storage
     // cleanup here can leave Safari showing a blank page if those APIs stall.
     var flutterBootstrap = document.createElement('script');
-    flutterBootstrap.src = 'flutter_bootstrap.js?build=4a033d5d7c48ac74c23665eb4e995b77dd38271b';
+    flutterBootstrap.src = 'flutter_bootstrap.js?build=8dbfe4f4bb3409dc496aacafdd185e55274b76c0';
     flutterBootstrap.async = true;
     document.body.appendChild(flutterBootstrap);
 
-    // Retire old offline workers in the background without blocking startup.
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations()
-        .then(function (registrations) {
-          return Promise.all(registrations.map(function (registration) {
-            return registration.unregister();
-          }));
-        })
-        .catch(function () {});
+    // Purge an older Flutter PWA after startup, then reload this release once
+    // so a page still controlled by the old worker picks up the new bundle.
+    var buildId = '8dbfe4f4bb3409dc496aacafdd185e55274b76c0';
+    var refreshKey = '_smart_aid_cache_refresh';
+    var pageUrl = new URL(window.location.href);
+    var alreadyRefreshed = pageUrl.searchParams.get(refreshKey) === buildId;
+    if (alreadyRefreshed) {
+      pageUrl.searchParams.delete(refreshKey);
+      window.history.replaceState(null, '', pageUrl.toString());
     }
+
+    var cleanupFinished = false;
+    var refreshStarted = false;
+    function refreshOnce() {
+      if (alreadyRefreshed || refreshStarted) return;
+      refreshStarted = true;
+      var freshUrl = new URL(window.location.href);
+      freshUrl.searchParams.set(refreshKey, buildId);
+      window.location.replace(freshUrl.toString());
+    }
+
+    var cleanupTasks = [];
+    try {
+      if ('serviceWorker' in navigator) {
+        cleanupTasks.push(navigator.serviceWorker.getRegistrations().then(
+          function (registrations) {
+            return Promise.all(registrations.map(function (registration) {
+              return registration.unregister();
+            })).then(function () { return registrations.length > 0; });
+          }
+        ));
+      }
+    } catch (_) {}
+    try {
+      if ('caches' in window) {
+        cleanupTasks.push(caches.keys().then(function (keys) {
+          return Promise.all(keys.map(function (key) {
+            return caches.delete(key);
+          })).then(function () { return keys.length > 0; });
+        }));
+      }
+    } catch (_) {}
+
+    Promise.all(cleanupTasks).then(function (results) {
+      cleanupFinished = true;
+      if (results.some(Boolean)) refreshOnce();
+    }).catch(function () {
+      cleanupFinished = true;
+      refreshOnce();
+    });
+    window.setTimeout(function () {
+      if (!cleanupFinished) refreshOnce();
+    }, 4000);
   </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.
