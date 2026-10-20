@@ -46,7 +46,7 @@ _flutter.buildConfig = {"engineRevision":"deb287481e3ce9468f3434937ced4240a70539
 for (const build of _flutter.buildConfig.builds) {
   const entrypoint = build.mainJsPath || 'main.dart.js';
   const separator = entrypoint.includes('?') ? '&' : '?';
-  build.mainJsPath = `${entrypoint}${separator}build=10ddffaa88ee1f807040d242d2c02be83d5387f1`;
+  build.mainJsPath = `${entrypoint}${separator}build=dc086f18031603b396b47e03323154a50d89097a`;
 }
 
 // Some iOS Safari and embedded WebViews fail to create CanvasKit's WebGL
