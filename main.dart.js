@@ -109304,20 +109304,21 @@ c=this.b
 r=A.hf(c,0,A.rp(6,"count",t.S),A.Y(c).c).h8(0)
 c=A.Y(r).i("ac<1,M>")
 q=A.X(new A.ac(r,new A.ad1(s,b),c),c.i("aJ.E"))
-c=b.b
-p=c*1.7
-o=p>430?p:430
-n=A.bh1(q,o,20261022+r.length*31,c)
-m=A.b([],t.p)
-for(l=this.a,k=t.kK,j=0;j<r.length;++j){i=n[j]
+c=r.length
+p=b.b
+o=p*(0.55+c*0.15)
+n=o>280?o:280
+m=A.bh1(q,n,20261022+c*31,p)
+c=A.b([],t.p)
+for(l=this.a,k=t.kK,j=0;j<r.length;++j){i=m[j]
 h=i.c
 g=r[j]
 f=g.a
 e=B.b.h1(B.ns,f)
-m.push(new A.j2(i.a,i.b,d,d,h,h,new A.a_L(g,B.u6[e<0?6:e],new A.ad2(l,a,r,j),new A.dF("disaster-category-"+f,k)),d))}return A.cK(A.h4(B.bS,m,B.t,B.be,d),o,c)},
+c.push(new A.j2(i.a,i.b,d,d,h,h,new A.a_L(g,B.u6[e<0?6:e],new A.ad2(l,a,r,j),new A.dF("disaster-category-"+f,k)),d))}return A.cK(A.h4(B.bS,c,B.t,B.be,d),n,p)},
 $S:703}
 A.ad1.prototype={
-$1(a){return B.d.cq(B.d.cq(112+(J.c3(a.b)-1)*3+this.a*44,112,150),0,this.b.b)},
+$1(a){return B.d.cq(B.d.cq((112+(J.c3(a.b)-1)*3+this.a*44)*0.6666666666666666,74,100),0,this.b.b)},
 $S:704}
 A.ad2.prototype={
 $0(){var s=this
