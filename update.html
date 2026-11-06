@@ -15,14 +15,16 @@
 <body>
   <main>
     <h1>正在更新畫面</h1>
-    <p id="status">清除舊版快取後，將自動開啟最新版本。</p>
+    <p>解除舊版 App 快取後，將自動開啟最新版本。</p>
   </main>
   <script>
     (async function () {
-      const appBase = new URL('./', window.location.href);
-      const isThisAppScope = (registration) => {
+      const appPath = new URL('./', window.location.href).pathname;
+      const belongsToThisApp = (registration) => {
         try {
-          return new URL(registration.scope).pathname.startsWith(appBase.pathname);
+          const scope = new URL(registration.scope);
+          return scope.origin === window.location.origin &&
+            (scope.pathname === '/' || scope.pathname.startsWith(appPath));
         } catch (_) {
           return false;
         }
@@ -31,19 +33,22 @@
       try {
         if ('serviceWorker' in navigator) {
           const registrations = await navigator.serviceWorker.getRegistrations();
-          jobs.push(...registrations.filter(isThisAppScope).map((registration) => registration.unregister()));
+          jobs.push(...registrations
+            .filter(belongsToThisApp)
+            .map((registration) => registration.unregister()));
         }
       } catch (_) {}
       try {
         if ('caches' in window) {
           const keys = await caches.keys();
-          const flutterCaches = keys.filter((key) => /^flutter-(app|temp|app-manifest)/i.test(key));
-          jobs.push(...flutterCaches.map((key) => caches.delete(key)));
+          jobs.push(...keys
+            .filter((key) => /^flutter-(app|temp|app-manifest)/i.test(key))
+            .map((key) => caches.delete(key)));
         }
       } catch (_) {}
       await Promise.race([
         Promise.allSettled(jobs),
-        new Promise((resolve) => window.setTimeout(resolve, 2500))
+        new Promise((resolve) => window.setTimeout(resolve, 4000))
       ]);
       const latest = new URL('./', window.location.href);
       latest.searchParams.set('_refresh', Date.now().toString());
