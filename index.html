@@ -38,13 +38,13 @@
     // Start Flutter immediately. Waiting for Service Worker or Cache Storage
     // cleanup here can leave Safari showing a blank page if those APIs stall.
     var flutterBootstrap = document.createElement('script');
-    flutterBootstrap.src = 'flutter_bootstrap.js?build=08de1c22a33d423a0ae1d68c4e18fa4a5c896f04';
+    flutterBootstrap.src = 'flutter_bootstrap.js?build=1328a6aaa25c18f87c19dafce2dfbff0df4dc8dd';
     flutterBootstrap.async = true;
     document.body.appendChild(flutterBootstrap);
 
     // Purge an older Flutter PWA after startup, then reload this release once
     // so a page still controlled by the old worker picks up the new bundle.
-    var buildId = '08de1c22a33d423a0ae1d68c4e18fa4a5c896f04';
+    var buildId = '1328a6aaa25c18f87c19dafce2dfbff0df4dc8dd';
     var refreshKey = '_smart_aid_cache_refresh';
     var pageUrl = new URL(window.location.href);
     var alreadyRefreshed = pageUrl.searchParams.get(refreshKey) === buildId;
